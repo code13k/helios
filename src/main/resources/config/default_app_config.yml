@@ -1,0 +1,6 @@
+# Server port
+port:
+  sub_ws: 55400
+  pub_ws: 55401
+  pub_http: 55402
+  api_http: 55403
