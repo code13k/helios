@@ -2,6 +2,7 @@
 * Subscribe message via websocket
 * Publish message via websocket and http
 
+[![Build Status](https://travis-ci.org/code13k/helios.svg?branch=master)](https://travis-ci.org/code13k/helios)
 
 
 ## app_config.yml
