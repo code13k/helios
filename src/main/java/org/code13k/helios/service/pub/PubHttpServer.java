@@ -105,7 +105,7 @@ public class PubHttpServer extends AbstractVerticle {
 
         // TODO It will be deleted when migration is finished
         // Temporary API for migration
-        // GET,POST /api/v1/message/pub?topic={TOPIC}&message={메세지}
+        // GET,POST /api/v1/message/pub?topic={TOPIC}&message={MESSAGE}
         router.route().method(HttpMethod.GET).path("/api/v1/message/pub").handler(routingContext -> {
             routingContext.request().endHandler(new Handler<Void>() {
                 @Override
