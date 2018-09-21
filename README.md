@@ -121,6 +121,50 @@ http://example.com:55403/app/ping
 ```
 
 ### API
+#### GET /topic/count
+* Get topic count
+```json
+{"data":15}
+```
+
+### GET /topic/all
+* Get all topic
+##### Response
+```json
+{
+  "data": [
+    {
+      "channelCount": 15,
+      "topic": "primitive.topic.all"
+    },
+    {
+      "channelCount": 15,
+      "topic": "org.code13k.topic1"
+    },
+    ...
+  ]
+}
+```
+
+### GET /topic/search?keyword={KEYWORD}
+* Find topic with keyword
+##### Response
+```json
+{
+  "data": [
+    {
+      "channelCount": 15,
+      "topic": "primitive.topic.all"
+    },
+    {
+      "channelCount": 15,
+      "topic": "org.code13k.topic1"
+    },
+    ...
+  ]
+}
+```
+
 #### GET /app/status
 * Get application status and environment.
 ##### Response

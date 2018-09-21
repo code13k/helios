@@ -6,8 +6,10 @@ import io.vertx.core.Handler;
 import io.vertx.core.http.*;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
+import org.apache.commons.lang3.StringUtils;
 import org.code13k.helios.config.AppConfig;
 import org.code13k.helios.service.api.controller.AppAPI;
+import org.code13k.helios.service.api.controller.TopicAPI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +22,7 @@ public class ApiHttpServer extends AbstractVerticle {
 
     // Data
     private AppAPI mAppAPI = new AppAPI();
+    private TopicAPI mTopicAPI = new TopicAPI();
 
     /**
      * start()
@@ -38,6 +41,7 @@ public class ApiHttpServer extends AbstractVerticle {
         // Routing
         Router router = Router.router(vertx);
         setAppRouter(router);
+        setTopicRouter(router);
 
         // Listen
         httpServer.requestHandler(router::accept).listen();
@@ -105,6 +109,44 @@ public class ApiHttpServer extends AbstractVerticle {
                 @Override
                 public void handle(Void event) {
                     responseHttpOK(routingContext, mAppAPI.ping());
+                }
+            });
+        });
+    }
+
+    /**
+     * Set topic router
+     */
+    private void setTopicRouter(Router router) {
+        // GET /topic/count
+        router.route().method(HttpMethod.GET).path("/topic/count").handler(routingContext -> {
+            routingContext.request().endHandler(new Handler<Void>() {
+                @Override
+                public void handle(Void event) {
+                    responseHttpOK(routingContext, mTopicAPI.count());
+                }
+            });
+        });
+        // GET /topic/all
+        router.route().method(HttpMethod.GET).path("/topic/all").handler(routingContext -> {
+            routingContext.request().endHandler(new Handler<Void>() {
+                @Override
+                public void handle(Void event) {
+                    responseHttpOK(routingContext, mTopicAPI.all());
+                }
+            });
+        });
+        // GET /topic/search?keyword={KEYWORD}
+        router.route().method(HttpMethod.GET).path("/topic/search").handler(routingContext -> {
+            routingContext.request().endHandler(new Handler<Void>() {
+                @Override
+                public void handle(Void event) {
+                    String keyword = routingContext.request().getParam("keyword");
+                    if (StringUtils.isNotEmpty(keyword)) {
+                        responseHttpOK(routingContext, mTopicAPI.search(keyword));
+                    } else {
+                        responseHttpError(routingContext, 400, "Bad Request (Invalid Keyword)");
+                    }
                 }
             });
         });

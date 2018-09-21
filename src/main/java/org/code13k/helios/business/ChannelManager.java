@@ -11,6 +11,10 @@ import org.code13k.helios.app.Const;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ChannelManager {
@@ -103,6 +107,63 @@ public class ChannelManager {
      */
     public ChannelGroup getChannelGroup(String topic) {
         return mChannelGroupByTopic.get(topic);
+    }
+
+    /**
+     * Get topic list
+     */
+    public List<String> getTopicList(){
+        if (mChannelGroupByTopic != null) {
+            Enumeration<String> keys = mChannelGroupByTopic.keys();
+            List<String> keyList = Collections.list(keys);
+            return keyList;
+        }
+        return null;
+    }
+
+    /**
+     * Find topic list with keyword
+     */
+    public List<String> findTopicListWithKeyword(String keyword){
+        ArrayList<String> result = new ArrayList();
+        if (StringUtils.isNotEmpty(keyword)) {
+            try {
+                List<String> topicList = getTopicList();
+                for (String topic : topicList) {
+                    if (topic.contains(keyword)) {
+                        result.add(topic);
+                    }
+                }
+            } catch (Exception e) {
+                // Nothing
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Get topic count
+     */
+    public int getTopicCount(){
+        return mChannelGroupByTopic.size();
+    }
+
+    /**
+     * Get channel count
+     */
+    public int getChannelCount(String topic){
+        ChannelGroup channelGroup = getChannelGroup(topic);
+        if(channelGroup!=null){
+            return channelGroup.size();
+        }
+        return 0;
+    }
+
+    /**
+     * Get channel count
+     */
+    public int getChannelCount(){
+        return getChannelCount(Const.PrimitiveTopic.ALL);
     }
 
     /**
