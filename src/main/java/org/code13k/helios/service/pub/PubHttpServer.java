@@ -2,6 +2,7 @@ package org.code13k.helios.service.pub;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Handler;
+import io.vertx.core.MultiMap;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.*;
 import io.vertx.ext.web.Router;
@@ -98,6 +99,42 @@ public class PubHttpServer extends AbstractVerticle {
                     }
                     MessageSender.getInstance().sendMessageToTopic(topic, body);
                     response(routingContext, 200, "OK");
+                }
+            });
+        });
+
+        // TODO It will be deleted when migration is finished
+        // Temporary API for migration
+        // GET,POST /api/v1/message/pub?topic={TOPIC}&message={메세지}
+        router.route().method(HttpMethod.GET).path("/api/v1/message/pub").handler(routingContext -> {
+            routingContext.request().endHandler(new Handler<Void>() {
+                @Override
+                public void handle(Void event) {
+                    String topic = routingContext.request().getParam("topic");
+                    String message = routingContext.request().getParam("message");
+                    if (StringUtils.isNotEmpty(topic) && StringUtils.isNotEmpty(message)) {
+                        response(routingContext, 400, "Bad Request");
+                    } else {
+                        MessageSender.getInstance().sendMessageToTopic(topic, message);
+                        response(routingContext, 200, "OK");
+                    }
+                }
+            });
+        });
+        router.route().method(HttpMethod.POST).path("/api/v1/message/pub").handler(routingContext -> {
+            routingContext.request().setExpectMultipart(true);
+            routingContext.request().endHandler(new Handler<Void>() {
+                @Override
+                public void handle(Void event) {
+                    MultiMap form = routingContext.request().formAttributes();
+                    String topic = form.get("topic");
+                    String message = form.get("message");
+                    if (StringUtils.isNotEmpty(topic) && StringUtils.isNotEmpty(message)) {
+                        response(routingContext, 400, "Bad Request");
+                    } else {
+                        MessageSender.getInstance().sendMessageToTopic(topic, message);
+                        response(routingContext, 200, "OK");
+                    }
                 }
             });
         });
