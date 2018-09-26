@@ -3,7 +3,7 @@
     <!-- Stdout -->
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%highlight([%d{MM-dd HH:mm}] [%level] [%thread] [%logger{16}:%line]) %msg%n</pattern>
+            <pattern>%highlight([%d{MM-dd HH:mm:ss}] [%level] [%thread] [%logger{16}:%line]) %msg%n</pattern>
         </encoder>
     </appender>
 
@@ -16,7 +16,7 @@
             <maxFileSize>100MB</maxFileSize>
         </rollingPolicy>
         <encoder>
-            <pattern>[%d{MM-dd HH:mm}] [%level] [%thread] [%logger{16}:%line] %msg%n</pattern>
+            <pattern>[%d{MM-dd HH:mm:ss}] [%level] [%thread] [%logger{16}:%line] %msg%n</pattern>
         </encoder>
     </appender>
 
@@ -27,7 +27,7 @@
         <chatId></chatId>
         <minInterval>0</minInterval>
         <layout class="ch.qos.logback.classic.PatternLayout">
-            <pattern>[%d{MM-dd HH:mm}] [%level] [%thread] [%logger{16}:%line] %msg%n</pattern>
+            <pattern>[%d{MM-dd HH:mm:ss}] [%level] [%thread] [%logger{16}:%line] %msg%n</pattern>
         </layout>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>ERROR</level>
@@ -40,7 +40,7 @@
     <appender name="SLACK_SYNC" class="com.github.maricn.logback.SlackAppender">
         <webhookUri></webhookUri>
         <layout class="ch.qos.logback.classic.PatternLayout">
-            <pattern>[%d{MM-dd HH:mm}] [%level] [%thread] [%logger{16}:%line] %msg%n</pattern>
+            <pattern>[%d{MM-dd HH:mm:ss}] [%level] [%thread] [%logger{16}:%line] %msg%n</pattern>
         </layout>
     </appender>
     <appender name="SLACK" class="ch.qos.logback.classic.AsyncAppender">
