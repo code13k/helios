@@ -9,9 +9,9 @@
 
     <!-- File -->
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>log/zeroproxy.log</file>
+        <file>log/helios.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>log/zeroproxy-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <fileNamePattern>log/helios-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <maxHistory>10</maxHistory>
             <maxFileSize>100MB</maxFileSize>
         </rollingPolicy>

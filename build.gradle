@@ -54,7 +54,7 @@ dependencies {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 jar {
-    baseName = 'code13k-zeroproxy'
+    baseName = 'code13k-helios'
     manifest {
         attributes(
                 'Implementation-Title': 'Helios by code13k',
