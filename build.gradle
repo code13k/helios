@@ -42,7 +42,7 @@ dependencies {
     compile group: 'io.vertx', name: 'vertx-codegen', version: '3.5.3'
 
     // Util
-    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.7'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1'
     compile group: 'commons-io', name: 'commons-io', version: '2.6'
     compile group: 'commons-codec', name: 'commons-codec', version: '1.11'
     compile group: 'com.google.guava', name: 'guava', version: '26.0-jre'
