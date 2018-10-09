@@ -21,7 +21,7 @@ You can build high availability(HA) systems by clustering node.
 # Latest Release
 The current stable version is ready.
 
-The current unstable version is [v0.2.0-Alpha.1](https://github.com/code13k/helios/releases/tag/0.2.0-Alpha.1)
+The current unstable version is [v1.0.0-Alpha.1](https://github.com/code13k/helios/releases/tag/1.0.0-Alpha.1)
 
 
 ## License
