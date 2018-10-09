@@ -18,7 +18,7 @@ You can build high availability(HA) systems by clustering node.
 * **[API](./doc/api_server.md)**
 
 
-# Latest Release
+## Latest Release
 The current stable version is ready.
 
 The current unstable version is [v1.0.0-Alpha.1](https://github.com/code13k/helios/releases/tag/1.0.0-Alpha.1)
