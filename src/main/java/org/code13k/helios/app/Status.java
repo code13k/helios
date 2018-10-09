@@ -1,7 +1,8 @@
 package org.code13k.helios.app;
 
 import io.netty.channel.group.ChannelGroup;
-import org.code13k.helios.business.ChannelManager;
+import org.code13k.helios.business.channel.ChannelManager;
+import org.code13k.helios.business.channel.ClusteredChannel;
 import org.code13k.helios.business.message.MessageSender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,13 +71,20 @@ public class Status {
         // Running time (hour)
         sb.append("RunningTime=" + getAppRunningTimeHour() + "h");
 
-        // Sending message
+        // Sending message count
         sb.append(", SendingMessage=" + MessageSender.getInstance().messageCountInQueue());
 
+        // Topic count
+        sb.append(", Topics=" + ChannelManager.getInstance().getTopicCount());
+
         // Channel count
-        ChannelGroup channelGroup = ChannelManager.getInstance().getChannelGroup(Const.PrimitiveTopic.ALL);
-        int channelCount = (channelGroup == null) ? 0 : channelGroup.size();
-        sb.append(", Connected=" + channelCount);
+        sb.append(", Channels=" + ChannelManager.getInstance().getChannelCount());
+
+        // Clustered topic count
+        sb.append(", ClusteredTopics=" + ClusteredChannel.getInstance().getTopicCount());
+
+        // Clustered channel count
+        sb.append(", ClusteredChannels=" + ClusteredChannel.getInstance().getChannelCount());
 
         // End
         mLogger.info(sb.toString());

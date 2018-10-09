@@ -1,6 +1,6 @@
 package org.code13k.helios.model;
 
-public class Message extends BasicModel {
+public class TopicMessage extends BasicModel {
     private String topic;
     private String message;
 

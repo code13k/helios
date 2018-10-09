@@ -5,8 +5,8 @@ import io.netty.channel.group.ChannelGroup;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import org.apache.commons.lang3.StringUtils;
 import org.code13k.helios.app.Env;
-import org.code13k.helios.business.ChannelManager;
-import org.code13k.helios.model.Message;
+import org.code13k.helios.business.channel.ChannelManager;
+import org.code13k.helios.model.TopicMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +34,6 @@ public class MessageSender {
      */
     private MessageSender() {
         mLogger.info("MessageSender()");
-        init();
     }
 
     /**
@@ -52,15 +51,19 @@ public class MessageSender {
     /**
      * Message count in queue
      */
-    public int messageCountInQueue(){
+    public int messageCountInQueue() {
         return mMessageQueue.size();
     }
 
     /**
      * Send message to topic
      */
+    public boolean sendMessage(TopicMessage topicMessage) {
+        return sendMessageToTopic(topicMessage.getTopic(), topicMessage.getMessage());
+    }
+
     public boolean sendMessageToTopic(String topic, String message) {
-        // 예외처리
+        // Exception
         if (StringUtils.isBlank(topic) == true) {
             return false;
         }
@@ -68,11 +71,15 @@ public class MessageSender {
             return false;
         }
 
+        // Log
+        mLogger.debug("Send Message # topic = " + topic);
+        mLogger.debug("Send Message # message = " + message);
+
         // Add message to queue
-        Message messageObject = new Message();
-        messageObject.setTopic(topic);
-        messageObject.setMessage(message);
-        mMessageQueue.add(messageObject);
+        TopicMessage topicMessageObject = new TopicMessage();
+        topicMessageObject.setTopic(topic);
+        topicMessageObject.setMessage(message);
+        mMessageQueue.add(topicMessageObject);
         return true;
     }
 
@@ -108,18 +115,20 @@ public class MessageSender {
             @Override
             public void run() {
                 while (true) {
-                    Message sendingMessage = null;
+                    TopicMessage sendingTopicMessage = null;
 
                     try {
                         // Start to handle message
-                        sendingMessage = mMessageQueue.startToHandle();
+                        sendingTopicMessage = mMessageQueue.startToHandle();
 
                         // Process message
-                        if (sendingMessage != null) {
-                            ChannelGroup channelGroup = ChannelManager.getInstance().getChannelGroup(sendingMessage.getTopic());
-                            if (channelGroup != null) {
+                        if (sendingTopicMessage != null) {
+                            ChannelGroup channelGroup = ChannelManager.getInstance().getChannelGroup(sendingTopicMessage.getTopic());
+                            if (channelGroup == null) {
+                                mLogger.debug("channelGroup is null");
+                            } else {
                                 try {
-                                    TextWebSocketFrame messageFrame = new TextWebSocketFrame(sendingMessage.getMessage());
+                                    TextWebSocketFrame messageFrame = new TextWebSocketFrame(sendingTopicMessage.getMessage());
                                     channelGroup.writeAndFlush(messageFrame);
                                 } catch (Exception e) {
                                     mLogger.error("Error occurred", e);
@@ -136,8 +145,8 @@ public class MessageSender {
                         mLogger.error("Error occurred", e);
                     } finally {
                         // End to handle message
-                        if (sendingMessage != null) {
-                            mMessageQueue.endToHandle(sendingMessage);
+                        if (sendingTopicMessage != null) {
+                            mMessageQueue.endToHandle(sendingTopicMessage);
                         }
                     }
                 }

@@ -1,11 +1,13 @@
 package org.code13k.helios.config;
 
 import org.code13k.helios.lib.Util;
+import org.code13k.helios.model.config.app.ClusterInfo;
 import org.code13k.helios.model.config.app.PortInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 public class AppConfig extends BasicConfig {
@@ -14,6 +16,7 @@ public class AppConfig extends BasicConfig {
 
     // Data
     private PortInfo mPortInfo = new PortInfo();
+    private ClusterInfo mClusterInfo = new ClusterInfo();
 
     /**
      * Singleton
@@ -79,6 +82,21 @@ public class AppConfig extends BasicConfig {
             mPortInfo.setPubWs(portPubWs);
             mPortInfo.setPubHttp(portPubHttp);
             mPortInfo.setApiHttp(portApiHttp);
+
+            // ClusterInfo
+            LinkedHashMap clusterObject = (LinkedHashMap) yamlObject.get("cluster");
+            if (clusterObject != null) {
+                mLogger.trace("portObject class name = " + portObject.getClass().getName());
+                mLogger.trace("portObject = " + portObject);
+                Integer clusterPort = (Integer) clusterObject.get("port");
+                if (Util.isValidPortNumber(clusterPort) == false) {
+                    mLogger.error("Invalid port of cluster : " + clusterPort);
+                    return false;
+                }
+                ArrayList<String> clusterNodes = (ArrayList<String>) clusterObject.get("nodes");
+                mClusterInfo.setPort(clusterPort);
+                mClusterInfo.setNodes(clusterNodes);
+            }
         } catch (Exception e) {
             mLogger.error("Failed to load config file", e);
             return false;
@@ -102,6 +120,10 @@ public class AppConfig extends BasicConfig {
         mLogger.info("pub_http of PortInfo = " + mPortInfo.getPubHttp());
         mLogger.info("api_http of PortInfo = " + mPortInfo.getApiHttp());
 
+        // ClusterInfo
+        mLogger.info("port of ClusterInfo = " + mClusterInfo.getPort());
+        mLogger.info("nodes of ClusterInfo = " + mClusterInfo.getNodes());
+
         // End
         mLogger.info("------------------------------------------------------------------------");
     }
@@ -111,5 +133,12 @@ public class AppConfig extends BasicConfig {
      */
     public PortInfo getPort() {
         return mPortInfo;
+    }
+
+    /**
+     * Get cluster
+     */
+    public ClusterInfo getCluster() {
+        return mClusterInfo;
     }
 }

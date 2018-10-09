@@ -1,4 +1,4 @@
-package org.code13k.helios.business;
+package org.code13k.helios.business.channel;
 
 import io.netty.channel.Channel;
 import io.netty.channel.group.ChannelGroup;
@@ -112,19 +112,16 @@ public class ChannelManager {
     /**
      * Get topic list
      */
-    public List<String> getTopicList(){
-        if (mChannelGroupByTopic != null) {
-            Enumeration<String> keys = mChannelGroupByTopic.keys();
-            List<String> keyList = Collections.list(keys);
-            return keyList;
-        }
-        return null;
+    public List<String> getTopicList() {
+        Enumeration<String> keys = mChannelGroupByTopic.keys();
+        List<String> keyList = Collections.list(keys);
+        return keyList;
     }
 
     /**
      * Find topic list with keyword
      */
-    public List<String> findTopicListWithKeyword(String keyword){
+    public List<String> findTopicListWithKeyword(String keyword) {
         ArrayList<String> result = new ArrayList();
         if (StringUtils.isNotEmpty(keyword)) {
             try {
@@ -144,16 +141,16 @@ public class ChannelManager {
     /**
      * Get topic count
      */
-    public int getTopicCount(){
+    public int getTopicCount() {
         return mChannelGroupByTopic.size();
     }
 
     /**
      * Get channel count
      */
-    public int getChannelCount(String topic){
+    public int getChannelCount(String topic) {
         ChannelGroup channelGroup = getChannelGroup(topic);
-        if(channelGroup!=null){
+        if (channelGroup != null) {
             return channelGroup.size();
         }
         return 0;
@@ -162,7 +159,7 @@ public class ChannelManager {
     /**
      * Get channel count
      */
-    public int getChannelCount(){
+    public int getChannelCount() {
         return getChannelCount(Const.PrimitiveTopic.ALL);
     }
 
@@ -170,23 +167,30 @@ public class ChannelManager {
      * Add channel to channel group
      */
     private void addChannelToChannelGroup(Channel channel, String topic) {
-        ChannelGroup channelGroup = mChannelGroupByTopic.get(topic);
-        if (channelGroup == null) {
-            channelGroup = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-            mChannelGroupByTopic.put(topic, channelGroup);
+        synchronized (mChannelGroupByTopic) {
+            ChannelGroup channelGroup = mChannelGroupByTopic.get(topic);
+            if (channelGroup == null) {
+                channelGroup = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+                mChannelGroupByTopic.put(topic, channelGroup);
+            }
+            channelGroup.add(channel);
         }
-        channelGroup.add(channel);
     }
 
     /**
      * Remove channel from channel group
      */
     private void removeChannelFromChannelGroup(Channel channel, String topic) {
-        ChannelGroup channelGroup = mChannelGroupByTopic.get(topic);
-        if (channelGroup == null) {
-            return;
+        synchronized (mChannelGroupByTopic) {
+            ChannelGroup channelGroup = mChannelGroupByTopic.get(topic);
+            if (channelGroup == null) {
+                return;
+            }
+            channelGroup.remove(channel);
+            if (channelGroup.size() == 0) {
+                mChannelGroupByTopic.remove(topic);
+            }
         }
-        channelGroup.remove(channel);
     }
 
     /**

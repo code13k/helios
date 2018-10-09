@@ -1,7 +1,7 @@
 package org.code13k.helios.business.message;
 
 
-import org.code13k.helios.model.Message;
+import org.code13k.helios.model.TopicMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,7 +13,7 @@ public class MessageQueue {
     private static final Logger mLogger = LoggerFactory.getLogger(MessageQueue.class);
 
     // Message Queue
-    private final LinkedList<Message> mQueue = new LinkedList<>();
+    private final LinkedList<TopicMessage> mQueue = new LinkedList<>();
     private final HashSet<String> mHandlingTopic = new HashSet<>();
 
     /**
@@ -33,12 +33,12 @@ public class MessageQueue {
     /**
      * Add message to queue
      */
-    synchronized public void add(Message message) {
+    synchronized public void add(TopicMessage topicMessage) {
         try {
-            mQueue.add(message);
-            mLogger.trace("add() : " + message);
+            mQueue.add(topicMessage);
+            mLogger.trace("add() : " + topicMessage);
         } catch (Exception e) {
-            String msg = "Failed to add() : " + message;
+            String msg = "Failed to add() : " + topicMessage;
             mLogger.error(msg, e);
         }
     }
@@ -46,15 +46,15 @@ public class MessageQueue {
     /**
      * Start to handle message
      */
-    synchronized public Message startToHandle() {
+    synchronized public TopicMessage startToHandle() {
         try {
             int size = mQueue.size();
             for (int index = 0; index < size; index++) {
-                Message message = mQueue.get(index);
-                if (mHandlingTopic.contains(message.getTopic()) == false) {
-                    mHandlingTopic.add(message.getTopic());
-                    mLogger.trace("startToHandle() : " + message);
-                    return message;
+                TopicMessage topicMessage = mQueue.get(index);
+                if (mHandlingTopic.contains(topicMessage.getTopic()) == false) {
+                    mHandlingTopic.add(topicMessage.getTopic());
+                    mLogger.trace("startToHandle() : " + topicMessage);
+                    return topicMessage;
                 }
             }
             return null;
@@ -68,13 +68,13 @@ public class MessageQueue {
     /**
      * End to handle message
      */
-    synchronized public void endToHandle(Message message) {
+    synchronized public void endToHandle(TopicMessage topicMessage) {
         try {
-            mQueue.remove(message);
-            mHandlingTopic.remove(message.getTopic());
-            mLogger.trace("endToHandle() : " + message);
+            mQueue.remove(topicMessage);
+            mHandlingTopic.remove(topicMessage.getTopic());
+            mLogger.trace("endToHandle() : " + topicMessage);
         } catch (Exception e) {
-            String msg = "Failed to endToHandle() : " + message;
+            String msg = "Failed to endToHandle() : " + topicMessage;
             mLogger.error(msg, e);
         }
     }

@@ -7,6 +7,7 @@ import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.http.ServerWebSocket;
 import io.vertx.core.http.WebSocketFrame;
 import org.apache.commons.lang3.StringUtils;
+import org.code13k.helios.business.message.ClusteredMessage;
 import org.code13k.helios.business.message.MessageSender;
 import org.code13k.helios.config.AppConfig;
 import org.slf4j.Logger;
@@ -71,7 +72,7 @@ public class PubWsServer extends AbstractVerticle {
             public void handle(WebSocketFrame event) {
                 String frameMessage = event.textData();
                 mLogger.trace("handle : " + frameMessage);
-                MessageSender.getInstance().sendMessageToTopic(topic, frameMessage);
+                ClusteredMessage.getInstance().sendMessageToTopic(topic, frameMessage);
             }
         });
 

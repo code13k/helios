@@ -2,11 +2,12 @@ package org.code13k.helios.model;
 
 import com.google.gson.Gson;
 
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BasicModel implements Cloneable {
+public class BasicModel implements Serializable {
     /**
      * toMap()
      */

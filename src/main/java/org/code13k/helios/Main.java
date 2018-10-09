@@ -2,7 +2,10 @@ package org.code13k.helios;
 
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
-import org.code13k.helios.business.ChannelManager;
+import org.code13k.helios.app.Cluster;
+import org.code13k.helios.business.channel.ChannelManager;
+import org.code13k.helios.business.channel.ClusteredChannel;
+import org.code13k.helios.business.message.ClusteredMessage;
 import org.code13k.helios.business.message.MessageSender;
 import org.code13k.helios.config.AppConfig;
 import org.code13k.helios.config.LogConfig;
@@ -73,8 +76,11 @@ public class Main {
             AppConfig.getInstance().init();
             Env.getInstance().init();
             Status.getInstance().init();
+            Cluster.getInstance().init();
             ChannelManager.getInstance().init();
             MessageSender.getInstance().init();
+            ClusteredMessage.getInstance().init();
+            ClusteredChannel.getInstance().init();
         } catch (Exception e) {
             mLogger.error("Failed to initialize", e);
             System.exit(1);

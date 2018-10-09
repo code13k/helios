@@ -9,7 +9,7 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import org.apache.commons.lang3.StringUtils;
 import org.code13k.helios.app.Const;
-import org.code13k.helios.business.ChannelManager;
+import org.code13k.helios.business.channel.ChannelManager;
 import org.code13k.helios.business.message.MessageSender;
 import org.code13k.helios.config.AppConfig;
 import org.slf4j.Logger;

@@ -8,6 +8,7 @@ import io.vertx.core.http.*;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import org.apache.commons.lang3.StringUtils;
+import org.code13k.helios.business.message.ClusteredMessage;
 import org.code13k.helios.business.message.MessageSender;
 import org.code13k.helios.config.AppConfig;
 import org.slf4j.Logger;
@@ -97,7 +98,7 @@ public class PubHttpServer extends AbstractVerticle {
                         response(routingContext, 400, "Bad Request (Invalid Body)");
                         return;
                     }
-                    MessageSender.getInstance().sendMessageToTopic(topic, body);
+                    ClusteredMessage.getInstance().sendMessageToTopic(topic, body);
                     response(routingContext, 200, "OK");
                 }
             });
@@ -115,7 +116,7 @@ public class PubHttpServer extends AbstractVerticle {
                     if (StringUtils.isNotEmpty(topic) && StringUtils.isNotEmpty(message)) {
                         response(routingContext, 400, "Bad Request");
                     } else {
-                        MessageSender.getInstance().sendMessageToTopic(topic, message);
+                        ClusteredMessage.getInstance().sendMessageToTopic(topic, message);
                         response(routingContext, 200, "OK");
                     }
                 }
@@ -132,7 +133,7 @@ public class PubHttpServer extends AbstractVerticle {
                     if (StringUtils.isNotEmpty(topic) && StringUtils.isNotEmpty(message)) {
                         response(routingContext, 400, "Bad Request");
                     } else {
-                        MessageSender.getInstance().sendMessageToTopic(topic, message);
+                        ClusteredMessage.getInstance().sendMessageToTopic(topic, message);
                         response(routingContext, 200, "OK");
                     }
                 }
