@@ -1,215 +1,52 @@
-# Helios is topic-based pub/sub server using websocket.
-* Subscribe message via websocket
-* Publish message via websocket and http
+# Helios [![Build Status](https://travis-ci.org/code13k/helios.svg?branch=master)](https://travis-ci.org/code13k/helios)
+**Helios** is topic-based pub/sub server using WebSocket written in java.
+Helios provide a solution to broadcast message to many subscriber. So it can send many messages to many subscribers.
+Helios has four servers. One is a subscribing server using WebSocket, another is a publishing server using WebSocket, a third is a publishing server using http, the fourth is a restful API server using http.
 
-[![Build Status](https://travis-ci.org/code13k/helios.svg?branch=master)](https://travis-ci.org/code13k/helios)
+It provide pub method via HTTP and WebSocket.
+You can publish message using HTTP and WebSocket.
 
+It provider sub method via WebSocket.
+You can subscribe message using WebSocket.
 
-## app_config.yml
-It's application configuration file.
-```yaml
-# Server port
-port:
-  sub_ws: 55400
-  pub_ws: 55401
-  pub_http: 55402
-  api_http: 55403
-```
+It provide clustering nodes using Hazelcast.
+You can build high availability(HA) systems by clustering node.
 
-## logback.xml
-It's Logback configuration file that is famous logging library.
-* You can send error log to Telegram.
-  1. Uncomment *Telegram* configuration.
-  2. Set value of `<botToken>` and `<chatId>`.
-       ```xml
-       <appender name="TELEGRAM" class="com.github.paolodenti.telegram.logback.TelegramAppender">
-           <botToken></botToken>
-           <chatId></chatId>
-           ...
-       </appender>
-       ```
-  3. Insert `<appender-ref ref="TELEGRAM"/>` into `<root>`
-     ```xml
-     <root level="WARN">
-         <appender-ref ref="FILE"/>
-         <appender-ref ref="TELEGRAM"/>
-     </root>
-     ```
-* You can send error log to Slack.
-  1. Uncomment *Slack* configuration.
-  2. Set value of `<webhookUri>`.
-       ```xml
-       <appender name="SLACK_SYNC" class="com.github.maricn.logback.SlackAppender">
-           <webhookUri></webhookUri>
-           ...
-       </appender>
-       ```
-  3. Insert `<appender-ref ref="SLACK"/>` into `<root>`
-     ```xml
-     <root level="WARN">
-         <appender-ref ref="FILE"/>
-         <appender-ref ref="SLACK"/>
-     </root>
-     ```
-* You can reload configuration but need not to restart application.
+* **[Configuration](./doc/configuration.md)**
+* **[Publish Data](./doc/pub_server.md)**
+* **[Subscribe Data](./doc/sub_server.md)**
+* **[API](./doc/api_server.md)**
 
 
-# Server
-Helios has four servers. 
-One is a subscribing server using websocket, another is a publishing server using websocket, a thrid is a publishing server using http, the fourth is a restful API server using http.
+# Latest Release
+The current stable version is ready.
 
-## Sub Websocket Server
-### Usage
-```html
-ws://example.com:{port}/sub
-```
-* port
-  * Server port
-  * It's *sub_ws* in app_config.yml.
-* command
-  * SUB {topic}
-  * UNSUB {topic}
-  * PING
-  
-### Example
-```html
-ws://example.com:55401/sub
-SUB org.code13k.topic
-```
-  
-## Pub Websocket Server
-```html
-ws://example.com:{port}/pub/{topic}
-```
-* port
-  * Server port
-  * It's *pub_ws* in app_config.yml.
-* Publish message to specific topic via websocket
-  
-### Example
-```html
-ws://example.com:55401/pub/org.code13k.topic
-```
-  
-## Pub HTTP Server
-```html
-http://example.com:{port}/pub/{topic}
-```
-* port
-  * Server port
-  * It's *pub_http* in app_config.yml.
-* Publish message to specific topic.
-* Using POST and sending message add body.
+The current unstable version is [v0.2.0-Alpha.1](https://github.com/code13k/helios/releases/tag/0.2.0-Alpha.1)
 
 
-### Example
-```html
-http://example.com:55402/pub/org.code13k.topic
-```
+## License
+MIT License
 
-## API HTTP Server
-### Usage
-```html
-http://example.com:{port}/{domain}/{method}
-```
+Copyright (c) 2018 Code13K
 
-### Example
-```html
-http://example.com:55403/app/status
-http://example.com:55403/app/hello
-http://example.com:55403/app/ping
-```
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-### API
-#### GET /topic/count
-* Get topic count
-```json
-{"data":15}
-```
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-### GET /topic/all
-* Get all topic
-##### Response
-```json
-{
-  "data": [
-    {
-      "channelCount": 15,
-      "topic": "primitive.topic.all"
-    },
-    {
-      "channelCount": 15,
-      "topic": "org.code13k.topic1"
-    },
-    ...
-  ]
-}
-```
-
-### GET /topic/search?keyword={KEYWORD}
-* Find topic with keyword
-##### Response
-```json
-{
-  "data": [
-    {
-      "channelCount": 15,
-      "topic": "primitive.topic.all"
-    },
-    {
-      "channelCount": 15,
-      "topic": "org.code13k.topic1"
-    },
-    ...
-  ]
-}
-```
-
-#### GET /app/env
-* Get application environments
-##### Response
-```json
-{
-  "data":{
-    "applicationVersion": "1.4.0",
-    "hostname": "hostname",
-    "osVersion": "10.11.6",
-    "jarFile": "code13k-helios-1.0.0-alpha.1.jar",
-    "javaVersion": "1.8.0_25",
-    "ip": "192.168.0.121",
-    "javaVendor": "Oracle Corporation",
-    "osName": "Mac OS X",
-    "cpuProcessorCount": 4
-  }
-}
-```
-#### GET /app/status
-* Get application status
-##### Response
-```json
-{
-  "data":{
-    "threadInfo":{...},
-    "cpuUsage": 2.88,
-    "threadCount": 25,
-    "currentDate": "2018-10-02T01:15:21.290+09:00",
-    "startedDate": "2018-10-02T01:14:40.995+09:00",
-    "runningTimeHour": 0,
-    "vmMemoryUsage":{...}
-  }
-}
-```
-#### GET /app/hello
-* Hello, World
-##### Response
-```json
-{"data":"world"}
-```
-#### GET /app/ping
-* Ping-Pong
-##### Response
-```json
-{"data":"pong"}
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 
 
 
+                               

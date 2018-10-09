@@ -3,6 +3,7 @@ package org.code13k.helios.service.api.controller;
 import org.code13k.helios.app.Env;
 import org.code13k.helios.app.Status;
 import org.code13k.helios.config.AppConfig;
+import org.code13k.helios.model.config.app.ClusterInfo;
 import org.code13k.helios.model.config.app.PortInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,8 +40,10 @@ public class AppAPI extends BasicAPI {
      */
     public String config(){
         PortInfo portInfo = AppConfig.getInstance().getPort();
+        ClusterInfo clusterInfo = AppConfig.getInstance().getCluster();
         Map<String, Object> result = new HashMap<>();
         result.put("port", portInfo.toMap());
+        result.put("cluster", clusterInfo.toMap());
         return toResultJsonString(result);
     }
 
