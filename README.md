@@ -1,7 +1,7 @@
 # Helios [![Build Status](https://travis-ci.org/code13k/helios.svg?branch=master)](https://travis-ci.org/code13k/helios)
-**Helios** is topic-based pub/sub server using WebSocket written in java.
-Helios provide a solution to broadcast message to many subscriber. So it can send many messages to many subscribers.
-Helios has four servers. One is a subscribing server using WebSocket, another is a publishing server using WebSocket, a third is a publishing server using http, the fourth is a restful API server using http.
+**Helios** is topic-based pub/sub server using WebSocket written in Java.
+Helios provide a solution to broadcast message to many subscriber. So it can send many messages to many subscribers quickly.
+Helios has four servers. One is a subscribing server using WebSocket, another is a publishing server using WebSocket, a third is a publishing server using HTTP, the fourth is a restful API server using HTTP.
 
 It provide pub method via HTTP and WebSocket.
 You can publish message using HTTP and WebSocket.
